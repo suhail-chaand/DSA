@@ -1,12 +1,13 @@
 class Node:
-    #creating a node with two attributes: 
-    #the data-item and the next-node pointer
+    #creating a node with three attributes: 
+    #the data-item, the next-node and previous node pointers
     def __init__(self, item):
         self.item = item
         self.next = None
+        self.prev = None
 
-class LinkedList:
-    #creating a linked list with a pointer to the head node 
+class DoublyLinkedList:
+    #creating a linked list with a pointer to the head node
     def __init__(self):
         self.head = None
 
@@ -16,8 +17,10 @@ class LinkedList:
     #insert at the beginning
     def insertAtFirstIndex(self, new_item):
         new_node = Node(new_item)
-
+        
+        self.head.prev = new_node
         new_node.next = self.head
+        
         self.head = new_node
 
     #insert at an index
@@ -25,6 +28,7 @@ class LinkedList:
         new_node = Node(new_item)
 
         if index == 0:
+            self.head.prev = new_node
             new_node.next = self.head
             self.head = new_node
             return
@@ -33,9 +37,8 @@ class LinkedList:
             print('List is Empty')
             return
 
-        temp = self.head
-
         #find the node previous to the given index
+        temp = self.head
         for i in range(index - 1):
             temp = temp.next
             if temp is None:
@@ -48,14 +51,16 @@ class LinkedList:
 
         next = temp.next
 
+        next.prev = new_node
         temp.next = new_node
 
+        new_node.prev = temp
         new_node.next = next
 
     #insert at the end
     def appendItem(self, new_item):
         new_node = Node(new_item)
-
+        
         if self.head is None:
             self.head = new_node
             return
@@ -65,6 +70,7 @@ class LinkedList:
             last_item = last_item.next
 
         last_item.next = new_node
+        new_node.prev = last_item
 
 #Deletion
     def deleteNodeAt(self, index):
@@ -73,14 +79,14 @@ class LinkedList:
             print('List is Empty')
             return
 
-        temp = self.head
-
         if index == 0:
             self.head = temp.next
+            self.head.prev = None
             temp = None
             return
 
         #find the node previous to the given index
+        temp = self.head
         for i in range(index - 1):
             temp = temp.next
             if temp is None:
@@ -96,6 +102,8 @@ class LinkedList:
         temp.next = None
 
         temp.next = next
+        if next is not None:
+            next.prev = temp
 
 #Traverse
     def printList(self):
@@ -117,41 +125,41 @@ class LinkedList:
 
         return False
 
-#Creating a linked list object
-llist = LinkedList()
+#Creating a doubly linked list object
+dllist = DoublyLinkedList()
 
 print('Insertion------------------------------------')
 
-llist.appendItem(10)
-print('llist.appendItem(10) => ',end='')
-llist.printList()
+dllist.appendItem(10)
+print('dllist.appendItem(10) => ',end='')
+dllist.printList()
 
-llist.insertAtFirstIndex(20)
-print('llist.insertAtFirstIndex(20) => ',end='')
-llist.printList()
+dllist.insertAtFirstIndex(20)
+print('dllist.insertAtFirstIndex(20) => ',end='')
+dllist.printList()
 
-llist.insertAtFirstIndex(30)
-print('llist.insertAtFirstIndex(30) => ',end='')
-llist.printList()
+dllist.insertAtFirstIndex(30)
+print('dllist.insertAtFirstIndex(30) => ',end='')
+dllist.printList()
 
-llist.appendItem(40)
-print('llist.appendItem(40) => ',end='')
-llist.printList()
+dllist.appendItem(40)
+print('dllist.appendItem(40) => ',end='')
+dllist.printList()
 
-llist.insertAtIndex(3, 50)
-print('llist.insertAtIndex(3, 50) => ',end='')
-llist.printList()
+dllist.insertAtIndex(3, 50)
+print('dllist.insertAtIndex(3, 50) => ',end='')
+dllist.printList()
 
 print('Deletion-----------------------------------')
 
-llist.deleteNodeAt(3)
-print("llist.deleteNodeAt(3) => ",end=' ')
-llist.printList()
+dllist.deleteNodeAt(3)
+print("dllist.deleteNodeAt(3) => ",end=' ')
+dllist.printList()
 
 print('Traversal-----------------------------------')
-print("llist.search(30) => ",end=' ')
+print("dllist.search(30) => ",end=' ')
 item_to_find = 30
-if llist.search(item_to_find):
+if dllist.search(item_to_find):
     print(str(item_to_find) + " is found")
 else:
     print(str(item_to_find) + " is not found")
